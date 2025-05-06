@@ -45,7 +45,7 @@
 /* Private variables ---------------------------------------------------------*/
 
 /* USER CODE BEGIN PV */
-
+volatile uint16_t timer = 0;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -96,6 +96,12 @@ int main(void)
   MX_TIM2_Init();
   /* USER CODE BEGIN 2 */
 
+  LL_Init1msTick(SystemCoreClock);
+  LL_SYSTICK_EnableIT();  // Enable SysTick interrupt
+
+  Gpio mc_sleep(GPIOA, LL_GPIO_PIN_4); // Example GPIO pin for LED
+  Gpio mc_en(GPIOB, LL_GPIO_PIN_0); // Example GPIO pin for Button
+  Gpio led(GPIOA, LD2_Pin); // Example GPIO pin for LED
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -103,7 +109,10 @@ int main(void)
   while (1)
   {
     /* USER CODE END WHILE */
-
+	if(timer>500) {
+		led.toggle();
+		timer=0;
+	}
     /* USER CODE BEGIN 3 */
   }
   /* USER CODE END 3 */
