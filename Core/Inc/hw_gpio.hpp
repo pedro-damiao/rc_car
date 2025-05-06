@@ -1,11 +1,11 @@
-#ifndef __GPIOPIN_HPP
-#define __GPIOPIN_HPP
+#ifndef __HW_GPIO_HPP
+#define __HW_GPIO_HPP
 
 #include "stm32f4xx_ll_gpio.h"
 
-class GpioPin {
+class Gpio {
 public:
-    GpioPin(GPIO_TypeDef* port, uint16_t pin);
+    Gpio(GPIO_TypeDef* port, uint16_t pin);
 
     void set();
     void reset();
@@ -17,4 +17,4 @@ private:
     uint16_t m_pin;
 };
 
-#endif /* __GPIOPIN_HPP */
+#endif /* _HW_GPIO_HPP */
