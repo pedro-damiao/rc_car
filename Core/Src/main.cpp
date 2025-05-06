@@ -21,7 +21,7 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-
+#include "hw_gpio.hpp"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
