@@ -105,6 +105,20 @@ int main(void)
 
   mc_en.set();
   mc_sleep.set();
+
+  LL_TIM_EnableIT_UPDATE(TIM2);
+
+  uint16_t mc_PWM1_dutyCicle = 500;
+  uint16_t mc_PWM2_dutyCicle = 500;
+
+  LL_TIM_OC_SetCompareCH1(TIM2, mc_PWM1_dutyCicle);
+  LL_TIM_OC_SetCompareCH2(TIM2, mc_PWM2_dutyCicle);
+
+  LL_TIM_CC_EnableChannel(TIM2, LL_TIM_CHANNEL_CH1);
+  LL_TIM_CC_EnableChannel(TIM2, LL_TIM_CHANNEL_CH2);
+
+  LL_TIM_EnableCounter(TIM2);
+
   /* USER CODE END 2 */
 
   /* Infinite loop */
