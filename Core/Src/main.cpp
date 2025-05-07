@@ -102,6 +102,9 @@ int main(void)
   Gpio mc_sleep(GPIOA, LL_GPIO_PIN_4); // Example GPIO pin for LED
   Gpio mc_en(GPIOB, LL_GPIO_PIN_0); // Example GPIO pin for Button
   Gpio led(GPIOA, LD2_Pin); // Example GPIO pin for LED
+
+  mc_en.set();
+  mc_sleep.set();
   /* USER CODE END 2 */
 
   /* Infinite loop */
