@@ -25,6 +25,7 @@
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "hw_gpio.hpp"
+#include "stdio.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -56,7 +57,12 @@ void SystemClock_Config(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
-
+int __io_putchar (int ch)
+{
+  while (!LL_USART_IsActiveFlag_TXE(USART2));
+  LL_USART_TransmitData8(USART2, (char)ch);
+  return ch;
+}
 /* USER CODE END 0 */
 
 /**
