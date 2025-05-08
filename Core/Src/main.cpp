@@ -27,6 +27,7 @@
 /* USER CODE BEGIN Includes */
 #include "hw_gpio.hpp"
 #include "stdio.h"
+#include "mw_motor_controller.hpp"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -125,6 +126,12 @@ int main(void)
   LL_TIM_CC_EnableChannel(TIM2, LL_TIM_CHANNEL_CH2);
 
   LL_TIM_EnableCounter(TIM2);
+
+  LL_SPI_Enable(SPI2);
+
+  //Spi motorController_spi(spi, csPort, csPin, readCmd, writeCmd);
+
+  //MotorController TB9054FTG_mc(motorController_spi);
   /* USER CODE END 2 */
 
   /* Infinite loop */
