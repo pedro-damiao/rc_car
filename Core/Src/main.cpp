@@ -18,6 +18,7 @@
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
+#include "spi.h"
 #include "tim.h"
 #include "usart.h"
 #include "gpio.h"
@@ -100,8 +101,8 @@ int main(void)
   MX_GPIO_Init();
   MX_USART2_UART_Init();
   MX_TIM2_Init();
+  MX_SPI2_Init();
   /* USER CODE BEGIN 2 */
-
   LL_Init1msTick(SystemCoreClock);
   LL_SYSTICK_EnableIT();  // Enable SysTick interrupt
 
@@ -124,7 +125,6 @@ int main(void)
   LL_TIM_CC_EnableChannel(TIM2, LL_TIM_CHANNEL_CH2);
 
   LL_TIM_EnableCounter(TIM2);
-
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -132,10 +132,10 @@ int main(void)
   while (1)
   {
     /* USER CODE END WHILE */
-	if(timer>500) {
-		led.toggle();
-		timer=0;
-	}
+    if(timer>500) {
+      led.toggle();
+      timer=0;
+    }
     /* USER CODE BEGIN 3 */
   }
   /* USER CODE END 3 */
