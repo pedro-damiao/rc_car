@@ -129,9 +129,14 @@ int main(void)
 
   LL_SPI_Enable(SPI2);
 
-  //Spi motorController_spi(spi, csPort, csPin, readCmd, writeCmd);
+  uint8_t READ_CMD = 0x00;
+  uint8_t WRITE_CMD = 0x01;
 
-  //MotorController TB9054FTG_mc(motorController_spi);
+  Spi motorController_spi(SPI2, GPIOC, LL_GPIO_PIN_0, READ_CMD, WRITE_CMD);
+  MotorController TB9054FTG_mc(motorController_spi, READ_CMD, WRITE_CMD);
+  uint32_t data_out = 0;
+  uint8_t status = TB9054FTG_mc.read_Status1(&data_out);
+  printf("Status: %d\n", status);
   /* USER CODE END 2 */
 
   /* Infinite loop */

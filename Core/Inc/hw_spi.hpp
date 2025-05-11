@@ -9,13 +9,14 @@ class Spi {
 public:
     Spi(SPI_TypeDef* spi, GPIO_TypeDef* csPort, uint16_t csPin, uint32_t readCmd, uint32_t writeCmd);
 
-    void read(uint8_t address, uint8_t* buffer, uint8_t length);
-    uint8_t readByte(uint8_t address);
-    void writeByte(uint8_t address, uint8_t data);
-
-private:
+    void write(uint8_t *buffer, uint8_t length);
+    void read(uint8_t data, uint8_t *buffer, uint8_t length);
+    void setReadCmd(uint32_t readCmd);
+    void setWriteCmd(uint32_t writeCmd);
     void select();
     void deselect();
+
+private:
     uint8_t TransmitAndReceive(uint8_t data);
 
     SPI_TypeDef* m_spi;

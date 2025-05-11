@@ -1,7 +1,15 @@
 #include "hw_spi.hpp"
 
-Spi::Spi(SPI_TypeDef* spi, GPIO_TypeDef* csPort, uint16_t csPin, uint32_t readCmd, uint32_t writeCmd)
+Spi::Spi(SPI_TypeDef* spi, GPIO_TypeDef* csPort, uint16_t csPin, uint32_t readCmd = 0x00, uint32_t writeCmd = 0x01)
     : m_spi(spi), m_csPort(csPort), m_csPin(csPin), m_READ_CMD(readCmd), m_WRITE_CMD(writeCmd) {}
+
+void Spi::setReadCmd(uint32_t readCmd) {
+    m_READ_CMD = readCmd;
+}
+
+void Spi::setWriteCmd(uint32_t writeCmd) {
+    m_WRITE_CMD = writeCmd;
+}
 
 void Spi::deselect(){
     LL_GPIO_SetOutputPin(m_csPort, m_csPin);
@@ -13,39 +21,21 @@ void Spi::select(){
     LL_mDelay(1);
 }
 
-uint8_t Spi::readByte(uint8_t address)
+void Spi::write(uint8_t *buffer, uint8_t length)
 {
-    uint8_t ret;
-
-    select();
-    TransmitAndReceive(m_READ_CMD); // 1st byte
-    TransmitAndReceive(address);  // 2nd byte
-    // transmit garbage byte to receive
-    ret = TransmitAndReceive(0x0); // Receive
-    deselect();
-
-    return ret;
+    for(uint8_t i=0; i < length; i++)
+    { 
+        TransmitAndReceive(buffer[i]);
+    }
 }
 
-void Spi::read(uint8_t address, uint8_t *buffer, uint8_t length)
+void Spi::read(uint8_t data, uint8_t *buffer, uint8_t length)
 {
   // read multiple bytes
   for(uint8_t i=0; i < length; i++)
   {
-    buffer[i] = readByte(address+i);
+    buffer[i] = TransmitAndReceive(data);
   }
-}
-
-void Spi::writeByte(uint8_t address, uint8_t data)
-{
-  select();
-  TransmitAndReceive(m_WRITE_CMD);
-  TransmitAndReceive(address);
-  TransmitAndReceive(data);
-  deselect();
-
-  // wait write cycle time 5ms
-  LL_mDelay(5);
 }
 
 uint8_t Spi::TransmitAndReceive(uint8_t data) {
