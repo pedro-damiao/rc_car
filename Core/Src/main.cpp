@@ -26,8 +26,8 @@
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "hw_gpio.hpp"
-#include "stdio.h"
 #include "mw_motor_controller.hpp"
+#include "stdio.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -59,12 +59,22 @@ void SystemClock_Config(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
-int __io_putchar (int ch)
+extern "C" int __io_putchar (int ch)
 {
   while (!LL_USART_IsActiveFlag_TXE(USART2));
   LL_USART_TransmitData8(USART2, (char)ch);
   return ch;
 }
+/*
+extern "C" int _write(int file, char *ptr, int len)
+{
+    for (int i = 0; i < len; i++)
+    {
+        while (!LL_USART_IsActiveFlag_TXE(USART2));
+        LL_USART_TransmitData8(USART2, ptr[i]);
+    }
+    return len;
+}*/
 /* USER CODE END 0 */
 
 /**
@@ -111,7 +121,10 @@ int main(void)
   Gpio mc_en(GPIOB, LL_GPIO_PIN_0); // Example GPIO pin for Button
   Gpio led(GPIOA, LD2_Pin); // Example GPIO pin for LED
 
-  mc_en.set();
+  mc_en.reset();
+  mc_sleep.reset();
+
+  LL_mDelay(100);
   mc_sleep.set();
 
   LL_TIM_EnableIT_UPDATE(TIM2);
@@ -136,7 +149,7 @@ int main(void)
   MotorController TB9054FTG_mc(motorController_spi, READ_CMD, WRITE_CMD);
   uint32_t data_out = 0;
   uint8_t status = TB9054FTG_mc.read_Status1(&data_out);
-  printf("Status: %d\n", status);
+  printf("Status: %d\n\r", data_out);
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -147,6 +160,9 @@ int main(void)
     if(timer>500) {
       led.toggle();
       timer=0;
+      printf("Led toggle\n\r");
+      //fflush(stdout);
+
     }
     /* USER CODE BEGIN 3 */
   }

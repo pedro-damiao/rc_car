@@ -17,7 +17,7 @@ void Spi::deselect(){
 }
 
 void Spi::select(){
-    LL_GPIO_SetOutputPin(m_csPort, m_csPin);
+    LL_GPIO_ResetOutputPin(m_csPort, m_csPin);
     LL_mDelay(1);
 }
 
