@@ -126,11 +126,20 @@ int main(void)
 
   LL_mDelay(100);
   mc_sleep.set();
+  mc_en.set();
+
+  LL_mDelay(100);
+  mc_en.reset();
+  mc_sleep.reset();
+
+  LL_mDelay(100);
+  mc_sleep.set();
+  mc_en.set();
 
   LL_TIM_EnableIT_UPDATE(TIM2);
 
-  uint16_t mc_PWM1_dutyCicle = 500;
-  uint16_t mc_PWM2_dutyCicle = 500;
+  uint16_t mc_PWM1_dutyCicle = 800;
+  uint16_t mc_PWM2_dutyCicle = 0;
 
   LL_TIM_OC_SetCompareCH1(TIM2, mc_PWM1_dutyCicle);
   LL_TIM_OC_SetCompareCH2(TIM2, mc_PWM2_dutyCicle);
@@ -149,7 +158,7 @@ int main(void)
   MotorController TB9054FTG_mc(motorController_spi, READ_CMD, WRITE_CMD);
   uint32_t data_out = 0;
   uint8_t status = TB9054FTG_mc.read_Status1(&data_out);
-  printf("Status: %d\n\r", data_out);
+  printf("Status: %d, data %d\n\r",status, data_out);
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -157,10 +166,12 @@ int main(void)
   while (1)
   {
     /* USER CODE END WHILE */
-    if(timer>500) {
+    if(timer>1000) {
       led.toggle();
       timer=0;
       printf("Led toggle\n\r");
+      uint8_t status = TB9054FTG_mc.read_Status1(&data_out);
+      printf("Status: %d, data %d\n\r",status, data_out);
       //fflush(stdout);
 
     }
