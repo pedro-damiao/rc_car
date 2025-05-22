@@ -156,9 +156,16 @@ int main(void)
 
   Spi motorController_spi(SPI2, GPIOC, LL_GPIO_PIN_0, READ_CMD, WRITE_CMD);
   MotorController TB9054FTG_mc(motorController_spi, READ_CMD, WRITE_CMD);
+
   uint32_t data_out = 0;
-  uint8_t status = TB9054FTG_mc.read_Status1(&data_out);
-  printf("Status: %d, data %d\n\r",status, data_out);
+  uint8_t status = TB9054FTG_mc.read_register(&data_out, register_STATUS1);
+  printf("Status1: %d, data %d\n\r",status, data_out);
+  status = TB9054FTG_mc.read_register(&data_out, register_STATUS2);
+  printf("Status2: %d, data %d\n\r",status, data_out);
+  status = TB9054FTG_mc.read_register(&data_out, register_STATUS3);
+  printf("Status3: %d, data %d\n\r",status, data_out);
+
+  
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -170,8 +177,6 @@ int main(void)
       led.toggle();
       timer=0;
       printf("Led toggle\n\r");
-      uint8_t status = TB9054FTG_mc.read_Status1(&data_out);
-      printf("Status: %d, data %d\n\r",status, data_out);
       //fflush(stdout);
 
     }

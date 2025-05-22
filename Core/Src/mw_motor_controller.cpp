@@ -1,16 +1,23 @@
 #include "mw_motor_controller.hpp"
 
+static inline bool buffers_equal(const uint8_t *a, const uint8_t *b, int len) {
+    for (int i = 0; i < len; ++i) {
+        if (a[i] != b[i]) return false;
+    }
+    return true;
+}
+
 MotorController::MotorController(Spi spi, uint32_t readCmd, uint32_t writeCmd)
     : m_spi(spi), m_READ_CMD(readCmd), m_WRITE_CMD(writeCmd) {
         m_spi.setReadCmd(readCmd);
         m_spi.setWriteCmd(writeCmd);
     }
 
-uint8_t MotorController::read_Status1(uint32_t *data_out)
+uint8_t MotorController::read_register(uint32_t *data_out, uint8_t register_address)
 {
     uint8_t write_buf[5] = {0};
     uint8_t read_buf[5] = {0};
-    write_buf[0] = register_STATUS1 & (~SPI_READ_WRITE_BIT);
+    write_buf[0] = register_address & (~SPI_READ_WRITE_BIT);
     write_buf[1] = DUMMY;
     write_buf[2] = DUMMY;
     write_buf[3] = DUMMY;
@@ -29,6 +36,35 @@ uint8_t MotorController::read_Status1(uint32_t *data_out)
     *data_out = ( ( uint32_t ) (read_buf[ 1 ] << 16) ) | ( ( uint16_t ) (read_buf[ 2 ] << 8) ) | read_buf[ 3 ];
 
     if (( write_buf[ 0 ] != read_buf[ 0 ] ) || ( read_buf[ 4 ] != calculateCRC ( read_buf, 4 ) ) ) {
+        return 0;
+    }
+    else {
+        return 1;
+    }
+}
+
+uint8_t MotorController::write_register(uint32_t data_in, uint8_t register_address)
+{
+    uint8_t write_buf[5] = {0};
+    uint8_t read_buf[5] = {0};
+    write_buf[0] = register_address | SPI_READ_WRITE_BIT;
+    write_buf[1] = ( uint8_t ) ( ( data_in >> 16 ) & 0xFF );
+    write_buf[2] = ( uint8_t ) ( ( data_in >> 8 ) & 0xFF );
+    write_buf[3] = ( uint8_t ) ( data_in & 0xFF );
+    write_buf[4] = calculateCRC(write_buf, 4);
+
+    m_spi.select();
+    m_spi.write(write_buf, 5);
+    m_spi.deselect();
+
+    LL_mDelay(1);
+
+    m_spi.select();
+    m_spi.read(DUMMY, read_buf, 5);
+    m_spi.deselect();
+
+    write_buf[ 0 ] &= ( ~SPI_READ_WRITE_BIT );
+    if (( read_buf[ 0 ] & DCMOTOR12_ERROR_FLAG_BIT ) || ( !buffers_equal( write_buf, read_buf, 4 ) ) || ( read_buf[ 4 ] != calculateCRC ( read_buf, 4 ) ) ) {
         return 0;
     }
     else {
