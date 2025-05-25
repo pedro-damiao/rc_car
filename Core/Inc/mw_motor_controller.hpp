@@ -7,7 +7,9 @@
 
 #define register_STATUS1 0x01
 #define register_STATUS2 0x02
-#define register_STATUS3 0x02
+#define register_STATUS3 0x03
+#define register_CONFIG1 0x04
+
 
 #define DUMMY                       0x00
 #define SPI_READ_WRITE_BIT          0x80

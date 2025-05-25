@@ -138,7 +138,7 @@ int main(void)
 
   LL_TIM_EnableIT_UPDATE(TIM2);
 
-  uint16_t mc_PWM1_dutyCicle = 800;
+  uint16_t mc_PWM1_dutyCicle = 0;
   uint16_t mc_PWM2_dutyCicle = 0;
 
   LL_TIM_OC_SetCompareCH1(TIM2, mc_PWM1_dutyCicle);
@@ -165,6 +165,9 @@ int main(void)
   status = TB9054FTG_mc.read_register(&data_out, register_STATUS3);
   printf("Status3: %d, data %d\n\r",status, data_out);
 
+  TB9054FTG_mc.write_register(0x00000007, register_CONFIG1);
+
+  TB9054FTG_mc.write_register(0xFFFFFFFF, register_STATUS1);
   
   /* USER CODE END 2 */
 
