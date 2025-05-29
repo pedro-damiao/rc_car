@@ -116,27 +116,14 @@ int main(void)
   /* USER CODE BEGIN 2 */
   LL_Init1msTick(SystemCoreClock);
   LL_SYSTICK_EnableIT();  // Enable SysTick interrupt
-
-  Gpio mc_sleep(GPIOA, LL_GPIO_PIN_4); // Example GPIO pin for LED
-  Gpio mc_en(GPIOB, LL_GPIO_PIN_0); // Example GPIO pin for Button
-  Gpio led(GPIOA, LD2_Pin); // Example GPIO pin for LED
-
-  mc_en.reset();
-  mc_sleep.reset();
-
-  LL_mDelay(100);
-  mc_sleep.set();
-  mc_en.set();
-
-  LL_mDelay(100);
-  mc_en.reset();
-  mc_sleep.reset();
-
-  LL_mDelay(100);
-  mc_sleep.set();
-  mc_en.set();
-
   LL_TIM_EnableIT_UPDATE(TIM2);
+
+
+  /* GPIO for motor controller, enable and sleep. And also LED.*/
+  Gpio mc_sleep(GPIOA, LL_GPIO_PIN_4); // Example GPIO pin for LED
+  Gpio mc_enable(GPIOB, LL_GPIO_PIN_0); // Example GPIO pin for Button
+  Gpio led(GPIOA, LD2_Pin); // Example GPIO pin for LED
+  Gpio mc_spi_cs_motor(GPIOC, LL_GPIO_PIN_0); // Example GPIO pin for SPI CS
 
   uint16_t mc_PWM1_dutyCicle = 0;
   uint16_t mc_PWM2_dutyCicle = 0;
@@ -151,11 +138,9 @@ int main(void)
 
   LL_SPI_Enable(SPI2);
 
-  uint8_t READ_CMD = 0x00;
-  uint8_t WRITE_CMD = 0x01;
-
-  Spi motorController_spi(SPI2, GPIOC, LL_GPIO_PIN_0, READ_CMD, WRITE_CMD);
-  MotorController TB9054FTG_mc(motorController_spi, READ_CMD, WRITE_CMD);
+  Spi motorController_spi(SPI2, mc_spi_cs_motor);
+  MotorController TB9054FTG_mc(motorController_spi, mc_enable, mc_sleep);
+  TB9054FTG_mc.startMotor();
 
   uint32_t data_out = 0;
   uint8_t status = TB9054FTG_mc.read_register(&data_out, register_STATUS1);

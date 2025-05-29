@@ -7,11 +7,8 @@ static inline bool buffers_equal(const uint8_t *a, const uint8_t *b, int len) {
     return true;
 }
 
-MotorController::MotorController(Spi spi, uint32_t readCmd, uint32_t writeCmd)
-    : m_spi(spi), m_READ_CMD(readCmd), m_WRITE_CMD(writeCmd) {
-        m_spi.setReadCmd(readCmd);
-        m_spi.setWriteCmd(writeCmd);
-    }
+MotorController::MotorController(Spi spi, Gpio enable, Gpio sleep)
+    : m_spi(spi), m_enable(enable), m_sleep(sleep) {}
 
 uint8_t MotorController::read_register(uint32_t *data_out, uint8_t register_address)
 {
@@ -91,4 +88,10 @@ uint8_t MotorController::calculateCRC ( uint8_t *data_buf, uint8_t len )
         }
     }
     return crc;
+}
+
+uint8_t MotorController::startMotor(){
+    m_enable.reset();
+    m_sleep.reset();
+    return 1;
 }
