@@ -28,6 +28,8 @@
 #include "hw_gpio.hpp"
 #include "mw_motor_controller.hpp"
 #include "stdio.h"
+#include "hw_pwm.hpp"
+#include "hw_spi.hpp"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -114,8 +116,12 @@ int main(void)
   MX_TIM2_Init();
   MX_SPI2_Init();
   /* USER CODE BEGIN 2 */
+
+  // Add to some timing class ?
   LL_Init1msTick(SystemCoreClock);
   LL_SYSTICK_EnableIT();  // Enable SysTick interrupt
+  
+  // Add to PWM ?
   LL_TIM_EnableIT_UPDATE(TIM2);
 
 
@@ -125,34 +131,13 @@ int main(void)
   Gpio led(GPIOA, LD2_Pin); // Example GPIO pin for LED
   Gpio mc_spi_cs_motor(GPIOC, LL_GPIO_PIN_0); // Example GPIO pin for SPI CS
 
-  uint16_t mc_PWM1_dutyCicle = 0;
-  uint16_t mc_PWM2_dutyCicle = 0;
+  PWM mc_pwm(TIM2);
+  Spi mc_spi(SPI2, mc_spi_cs_motor);
+  MotorController mc_TB9054FTG(mc_spi, mc_pwm, mc_enable, mc_sleep);
 
-  LL_TIM_OC_SetCompareCH1(TIM2, mc_PWM1_dutyCicle);
-  LL_TIM_OC_SetCompareCH2(TIM2, mc_PWM2_dutyCicle);
+  mc_TB9054FTG.startMotor();
 
-  LL_TIM_CC_EnableChannel(TIM2, LL_TIM_CHANNEL_CH1);
-  LL_TIM_CC_EnableChannel(TIM2, LL_TIM_CHANNEL_CH2);
-
-  LL_TIM_EnableCounter(TIM2);
-
-  LL_SPI_Enable(SPI2);
-
-  Spi motorController_spi(SPI2, mc_spi_cs_motor);
-  MotorController TB9054FTG_mc(motorController_spi, mc_enable, mc_sleep);
-  TB9054FTG_mc.startMotor();
-
-  uint32_t data_out = 0;
-  uint8_t status = TB9054FTG_mc.read_register(&data_out, register_STATUS1);
-  printf("Status1: %d, data %d\n\r",status, data_out);
-  status = TB9054FTG_mc.read_register(&data_out, register_STATUS2);
-  printf("Status2: %d, data %d\n\r",status, data_out);
-  status = TB9054FTG_mc.read_register(&data_out, register_STATUS3);
-  printf("Status3: %d, data %d\n\r",status, data_out);
-
-  TB9054FTG_mc.write_register(0x00000007, register_CONFIG1);
-
-  TB9054FTG_mc.write_register(0xFFFFFFFF, register_STATUS1);
+  mc_TB9054FTG.updateSpeed(0, 800); // Set PWM duty cycle for motor control
   
   /* USER CODE END 2 */
 

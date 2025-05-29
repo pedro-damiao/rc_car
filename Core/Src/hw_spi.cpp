@@ -39,3 +39,8 @@ uint8_t Spi::TransmitAndReceive(uint8_t data) {
     while(!LL_SPI_IsActiveFlag_RXNE(m_spi));
     return LL_SPI_ReceiveData8(m_spi);
 }
+
+void Spi::enable() {
+    LL_SPI_Enable(m_spi);
+    while(!LL_SPI_IsEnabled(m_spi));
+}

@@ -14,6 +14,7 @@ public:
     void read(uint8_t data, uint8_t *buffer, uint8_t length);
     void select();
     void deselect();
+    void enable();
 
 private:
     uint8_t TransmitAndReceive(uint8_t data);
