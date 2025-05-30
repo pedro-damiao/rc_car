@@ -8,6 +8,15 @@ void PWM::setDutyCycle(uint16_t ch1, uint16_t ch2) {
     LL_TIM_OC_SetCompareCH2(m_timer, ch2);
 }
 
+void PWM::setDutyCycle2(uint32_t ch1) {
+    LL_TIM_OC_SetCompareCH1(m_timer, ch1);
+}
+
+void PWM::enable2() {
+    LL_TIM_CC_EnableChannel(m_timer, LL_TIM_CHANNEL_CH1);
+    LL_TIM_EnableCounter(m_timer);
+}
+
 void PWM::enable() {
     LL_TIM_CC_EnableChannel(m_timer, LL_TIM_CHANNEL_CH1);
     LL_TIM_CC_EnableChannel(m_timer, LL_TIM_CHANNEL_CH2);

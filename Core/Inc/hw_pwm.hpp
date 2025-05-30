@@ -8,6 +8,8 @@ public:
     PWM(TIM_TypeDef* TIMx);
     void setDutyCycle(uint16_t ch1, uint16_t ch2);
     void enable();
+    void setDutyCycle2(uint32_t ch1);
+    void enable2();
 private:
     TIM_TypeDef* m_timer;
 };

@@ -125,6 +125,7 @@ int main(void)
   
   // Add to PWM ?
   LL_TIM_EnableIT_UPDATE(TIM2);
+  LL_TIM_EnableIT_UPDATE(TIM3);
 
 
   /* GPIO for motor controller, enable and sleep. And also LED.*/
@@ -133,9 +134,18 @@ int main(void)
   Gpio led(GPIOA, LD2_Pin); // Example GPIO pin for LED
   Gpio mc_spi_cs_motor(GPIOC, LL_GPIO_PIN_0); // Example GPIO pin for SPI CS
 
+  int servo_pos_index = 0;
+  const uint16_t servo_positions[] = {900, 1500, 2100};
+  const int num_positions = sizeof(servo_positions) / sizeof(servo_positions[0]);
+
+  PWM servo_pwm(TIM3);
+
   PWM mc_pwm(TIM2);
   Spi mc_spi(SPI2, mc_spi_cs_motor);
   MotorController mc_TB9054FTG(mc_spi, mc_pwm, mc_enable, mc_sleep);
+
+  servo_pwm.enable2(); // Enable PWM for motor controller
+  servo_pwm.setDutyCycle2(1500);
 
   mc_TB9054FTG.startMotor();
 
@@ -152,8 +162,11 @@ int main(void)
       led.toggle();
       timer=0;
       printf("Led toggle\n\r");
-      //fflush(stdout);
-
+      //servo_pwm.setDutyCycle2(servo_positions[servo_pos_index]);
+      servo_pos_index++;
+      if(servo_pos_index >= num_positions) {
+        servo_pos_index = 0; // Reset index to loop through positions
+      }
     }
     /* USER CODE BEGIN 3 */
   }
