@@ -97,8 +97,8 @@ uint8_t MotorController::startMotor(){
     write_register(0x00000007, register_CONFIG1);
     write_register(0xFFFFFFFF, register_STATUS1);
     
-    m_enable.reset();
-    m_sleep.reset();
+    m_enable.set();
+    m_sleep.set();
     return 1;
 }
 

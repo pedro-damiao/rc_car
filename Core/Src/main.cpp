@@ -139,7 +139,7 @@ int main(void)
 
   mc_TB9054FTG.startMotor();
 
-  mc_TB9054FTG.updateSpeed(0, 800); // Set PWM duty cycle for motor control
+  mc_TB9054FTG.updateSpeed(0, 0); // Set PWM duty cycle for motor control
   
   /* USER CODE END 2 */
 
