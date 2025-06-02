@@ -91,7 +91,9 @@ uint8_t MotorController::calculateCRC ( uint8_t *data_buf, uint8_t len )
 }
 
 uint8_t MotorController::startMotor(){
-    m_pwm.enable();
+    m_pwm.enableChannel(LL_TIM_CHANNEL_CH1);
+    m_pwm.enableChannel(LL_TIM_CHANNEL_CH2);
+    m_pwm.enableCounter();
     m_spi.enable();
 
     write_register(0x00000007, register_CONFIG1);
@@ -103,5 +105,6 @@ uint8_t MotorController::startMotor(){
 }
 
 void MotorController::updateSpeed(uint16_t ch1, uint16_t ch2) {
-    m_pwm.setDutyCycle(ch1, ch2);
+    m_pwm.setDutyCycle(LL_TIM_CHANNEL_CH1, ch1);
+    m_pwm.setDutyCycle(LL_TIM_CHANNEL_CH2, ch2);
 }

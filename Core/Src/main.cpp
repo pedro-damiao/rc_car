@@ -144,8 +144,9 @@ int main(void)
   Spi mc_spi(SPI2, mc_spi_cs_motor);
   MotorController mc_TB9054FTG(mc_spi, mc_pwm, mc_enable, mc_sleep);
 
-  servo_pwm.enable2(); // Enable PWM for motor controller
-  servo_pwm.setDutyCycle2(1500);
+  servo_pwm.setDutyCycle(LL_TIM_CHANNEL_CH1, 1500);
+  servo_pwm.enableChannel(LL_TIM_CHANNEL_CH1);
+  servo_pwm.enableCounter();
 
   mc_TB9054FTG.startMotor();
 
