@@ -31,6 +31,7 @@
 #include "hw_pwm.hpp"
 #include "hw_spi.hpp"
 #include "car_control.hpp"
+#include "mw_transceiver_rf.hpp"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -135,16 +136,22 @@ int main(void)
   Gpio led(GPIOA, LD2_Pin); // Example GPIO pin for LED
   Gpio mc_spi_cs_motor(GPIOC, LL_GPIO_PIN_0); // Example GPIO pin for SPI CS
 
+  Gpio rf_t_spi_ncs(GPIOB, LL_GPIO_PIN_12); // Example GPIO pin for SPI CS
+  Gpio rf_t_enable(GPIOB, LL_GPIO_PIN_13); // Example GPIO pin for RF CE
+
   const uint16_t servo_positions[] = {900, 1500, 2100};
 
   PWM servo_pwm(TIM3);
   PWM mc_pwm(TIM2);
 
   Spi mc_spi(SPI2, mc_spi_cs_motor);
+  Spi rf_t_spi(SPI3, rf_t_spi_ncs);
   
   MotorController mc_TB9054FTG(mc_spi, mc_pwm, mc_enable, mc_sleep);
   
   CarControl CarControl(mc_TB9054FTG, servo_pwm);
+
+  TransceiverRF rf_t_nRF24L01(rf_t_spi, rf_t_enable);
   
   /* USER CODE END 2 */
 

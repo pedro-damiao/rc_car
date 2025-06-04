@@ -27,7 +27,7 @@ uint8_t MotorController::read_register(uint32_t *data_out, uint8_t register_addr
     LL_mDelay(1);
 
     m_spi.select();
-    m_spi.read(DUMMY, read_buf, 5);
+    m_spi.writeRead(DUMMY, read_buf, 5);
     m_spi.deselect();
 
     *data_out = ( ( uint32_t ) (read_buf[ 1 ] << 16) ) | ( ( uint16_t ) (read_buf[ 2 ] << 8) ) | read_buf[ 3 ];
@@ -57,7 +57,7 @@ uint8_t MotorController::write_register(uint32_t data_in, uint8_t register_addre
     LL_mDelay(1);
 
     m_spi.select();
-    m_spi.read(DUMMY, read_buf, 5);
+    m_spi.writeRead(DUMMY, read_buf, 5);
     m_spi.deselect();
 
     write_buf[ 0 ] &= ( ~SPI_READ_WRITE_BIT );

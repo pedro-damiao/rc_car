@@ -21,7 +21,8 @@ void Spi::write(uint8_t *buffer, uint8_t length)
     }
 }
 
-void Spi::read(uint8_t data, uint8_t *buffer, uint8_t length)
+// TODO:  ?? data for write should be an array and add timer.
+void Spi::writeRead(uint8_t data, uint8_t *buffer, uint8_t length)
 {
     // read multiple bytes
     for(uint8_t i=0; i < length; i++)

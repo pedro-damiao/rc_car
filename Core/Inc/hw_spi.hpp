@@ -11,7 +11,7 @@ public:
     Spi(SPI_TypeDef* spi, Gpio csPin);
 
     void write(uint8_t *buffer, uint8_t length);
-    void read(uint8_t data, uint8_t *buffer, uint8_t length);
+    void writeRead(uint8_t data, uint8_t *buffer, uint8_t length);
     void select();
     void deselect();
     void enable();
