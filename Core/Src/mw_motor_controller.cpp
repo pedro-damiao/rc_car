@@ -91,16 +91,19 @@ uint8_t MotorController::calculateCRC ( uint8_t *data_buf, uint8_t len )
 }
 
 uint8_t MotorController::startMotor(){
+	m_sleep.set();
+
     m_pwm.enableChannel(LL_TIM_CHANNEL_CH1);
     m_pwm.enableChannel(LL_TIM_CHANNEL_CH2);
     m_pwm.enableCounter();
     m_spi.enable();
 
     write_register(0x00000007, register_CONFIG1);
-    write_register(0xFFFFFFFF, register_STATUS1);
-    
+
     m_enable.set();
-    m_sleep.set();
+
+    write_register(0xFFFFFFFF, register_STATUS1);
+
     return 1;
 }
 
