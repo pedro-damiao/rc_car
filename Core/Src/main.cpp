@@ -140,8 +140,7 @@ int main(void)
   Gpio rf_t_enable(GPIOB, LL_GPIO_PIN_13); // Example GPIO pin for RF CE
 
   const uint16_t servo_positions[] = {900, 1500, 2100};
-  const int num_positions = sizeof(servo_positions) / sizeof(servo_positions[0]);
-  int i = 0; // Index for servo positions
+
   PWM servo_pwm(TIM3);
   PWM mc_pwm(TIM2);
 
@@ -156,13 +155,6 @@ int main(void)
   CarControl CarControl(mc_TB9054FTG, servo_pwm);
 
   TransceiverRF rf_t_nRF24L01(rf_t_spi, rf_t_enable);
-
-  uint32_t status1;
-  CarControl.m_motor.write_register(0xFFFFFFFF, register_STATUS1);
-  CarControl.m_motor.read_register(&status1, register_STATUS1);
-  printf("Motor status1: 0x%08X\n\r", status1);
-  
-  CarControl.setMotorSpeed(1000,0);
   
   /* USER CODE END 2 */
 
@@ -174,14 +166,6 @@ int main(void)
     if(timer>1000) {
       led.toggle();
       timer=0;
-      printf("Led toggle\n\r");
-      if (i == num_positions - 1) {
-        i = 0; // Reset to first position
-      } else {
-        i++; // Move to next position
-      }
-      CarControl.setServoPosition(servo_positions[i]);
-      printf("Servo position set to: %d\n\r", servo_positions[i]);
     }
     /* USER CODE BEGIN 3 */
   }

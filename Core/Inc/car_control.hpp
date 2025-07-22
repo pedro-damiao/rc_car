@@ -14,9 +14,8 @@ public:
     void setServoPosition(uint32_t value);
     void setMotorSpeed(uint16_t ch1, uint16_t ch2);
 
-    MotorController& m_motor;
-
 private:
+    MotorController& m_motor;
     PWM& m_servo_pwm;
 };
 
