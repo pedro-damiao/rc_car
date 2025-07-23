@@ -1,7 +1,9 @@
 #include "mw_transceiver_rf.hpp"
 
 TransceiverRF::TransceiverRF(Spi& spi, Gpio& enable)
-    : m_spi(spi), m_enable(enable) {}
+    : m_spi(spi), m_enable(enable) {
+    tx_init(2500, air_data_rate::_1Mbps);
+}
 
 // Reads a register from the via SPI.
 uint8_t TransceiverRF::read_register(uint8_t reg)

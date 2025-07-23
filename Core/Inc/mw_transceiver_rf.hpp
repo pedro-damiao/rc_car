@@ -77,6 +77,7 @@ enum class output_power : uint8_t {
 class TransceiverRF {
 public:
     TransceiverRF(Spi& spi, Gpio& enable);
+    void tx_irq();  
 
 private:
     Spi& m_spi;
@@ -87,8 +88,6 @@ private:
 
     void rx_receive(uint8_t* rx_payload);
     void tx_transmit(uint8_t* tx_payload);
-
-    void tx_irq();  
 
     void reset();
 

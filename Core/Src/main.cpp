@@ -22,6 +22,7 @@
 #include "tim.h"
 #include "usart.h"
 #include "gpio.h"
+#include "global_constants.h"
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
@@ -32,6 +33,7 @@
 #include "hw_spi.hpp"
 #include "car_control.hpp"
 #include "mw_transceiver_rf.hpp"
+
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -166,6 +168,10 @@ int main(void)
     if(timer>1000) {
       led.toggle();
       timer=0;
+    }
+    else if(nrf_tx_flag) {
+      nrf_tx_flag = 0;
+      rf_t_nRF24L01.tx_irq();
     }
     /* USER CODE BEGIN 3 */
   }
