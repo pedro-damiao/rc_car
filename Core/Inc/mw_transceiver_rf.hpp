@@ -78,6 +78,7 @@ class TransceiverRF {
 public:
     TransceiverRF(Spi& spi, Gpio& enable);
     void tx_irq();  
+    uint8_t read_register(uint8_t reg);
 
 private:
     Spi& m_spi;
@@ -121,7 +122,6 @@ private:
     void auto_retransmit_count(count cnt);
     void auto_retransmit_delay(delay us);
 
-    uint8_t read_register(uint8_t reg);
     uint8_t write_register(uint8_t reg, uint8_t value);
 };
 

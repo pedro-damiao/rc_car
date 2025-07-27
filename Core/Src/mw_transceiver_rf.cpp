@@ -2,6 +2,7 @@
 
 TransceiverRF::TransceiverRF(Spi& spi, Gpio& enable)
     : m_spi(spi), m_enable(enable) {
+	m_spi.enable();
     tx_init(2500, air_data_rate::_1Mbps);
 }
 
@@ -14,6 +15,11 @@ uint8_t TransceiverRF::read_register(uint8_t reg)
 
     m_spi.select();
     m_spi.writeRead(command, &status, 1);
+    m_spi.deselect();
+
+    LL_mDelay(1);
+
+    m_spi.select();
     m_spi.writeRead(DUMMY, &read_val, 1);
     m_spi.deselect();
 
@@ -26,10 +32,13 @@ uint8_t TransceiverRF::write_register(uint8_t reg, uint8_t value)
     uint8_t command = CMD_W_REGISTER | reg;
     uint8_t status;
     uint8_t write_val = value;
-
-    
     m_spi.select();
     m_spi.writeRead(command, &status, 1);
+    m_spi.deselect();
+
+    LL_mDelay(1);
+
+    m_spi.select();
     m_spi.write(&write_val, 1);
     m_spi.deselect();
     
