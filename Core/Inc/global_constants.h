@@ -7,7 +7,7 @@
 extern "C" {
 #endif
 
-extern volatile uint8_t nrf_tx_flag;
+extern volatile uint8_t nrf_it_flag;
 
 #ifdef __cplusplus
 }
