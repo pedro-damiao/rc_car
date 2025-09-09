@@ -84,14 +84,14 @@ public:
     enum class Mode {SB, RX, TX };
     Mode get_mode() const { return m_mode; }
 
+    void tx_transmit(uint8_t* tx_payload);
+
 private:
     Spi& m_spi;
     Gpio& m_enable;
     Mode m_mode = Mode::SB;
     
     void init(channel MHz, air_data_rate bps);
-
-    void tx_transmit(uint8_t* tx_payload);
 
     void reset();
 

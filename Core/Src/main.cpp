@@ -55,6 +55,8 @@
 
 /* USER CODE BEGIN PV */
 volatile uint16_t timer = 0;
+volatile uint8_t button_flag = 0;
+
 uint8_t tx_data[NRF24L01P_PAYLOAD_LENGTH] = {0, 1, 2, 3, 4, 5, 6, 7};
 uint8_t rx_data[NRF24L01P_PAYLOAD_LENGTH] = { 0, };
 
@@ -180,6 +182,9 @@ int main(void)
         rf_t_nRF24L01.tx_irq();
       }
       nrf_it_flag = 0;
+    }else if (button_flag) {
+      button_flag = 0;
+      rf_t_nRF24L01.tx_transmit(tx_data);
     }
     /* USER CODE BEGIN 3 */
   }

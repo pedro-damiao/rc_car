@@ -59,6 +59,8 @@
 
 /* USER CODE BEGIN EV */
 extern volatile uint16_t timer;
+extern volatile uint8_t button_flag;
+volatile uint32_t button_debounce_tick = 0;
 /* USER CODE END EV */
 
 /******************************************************************************/
@@ -242,7 +244,11 @@ void EXTI15_10_IRQHandler(void)
   {
     LL_EXTI_ClearFlag_0_31(LL_EXTI_LINE_13);
     /* USER CODE BEGIN LL_EXTI_LINE_13 */
-
+    if ((timer - button_debounce_tick) > 30) // 30ms debounce
+    {
+        button_flag = 1;
+        button_debounce_tick = timer;
+    }
     /* USER CODE END LL_EXTI_LINE_13 */
   }
   if (LL_EXTI_IsActiveFlag_0_31(LL_EXTI_LINE_14) != RESET)
